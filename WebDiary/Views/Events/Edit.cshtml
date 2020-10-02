@@ -1,0 +1,60 @@
+﻿@model WebDiary.Models.Event
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Event</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group">
+                <label asp-for="event_text" class="control-label"></label>
+                <input asp-for="event_text" class="form-control" />
+                <span asp-validation-for="event_text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="event_date" class="control-label"></label>
+                <input asp-for="event_date" class="form-control" />
+                <span asp-validation-for="event_date" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="created_user_id" class="control-label"></label>
+                <input asp-for="created_user_id" class="form-control" />
+                <span asp-validation-for="created_user_id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="created_on" class="control-label"></label>
+                <input asp-for="created_on" class="form-control" />
+                <span asp-validation-for="created_on" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="modified_user_id" class="control-label"></label>
+                <input asp-for="modified_user_id" class="form-control" />
+                <span asp-validation-for="modified_user_id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="modified_on" class="control-label"></label>
+                <input asp-for="modified_on" class="form-control" />
+                <span asp-validation-for="modified_on" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

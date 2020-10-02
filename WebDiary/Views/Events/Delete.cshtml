@@ -1,0 +1,58 @@
+﻿@model WebDiary.Models.Event
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.event_text)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.event_text)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.event_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.event_date)
+        </dd>
+        @*<dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user_id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user_id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_on)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_on)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user_id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user_id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_on)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_on)
+        </dd>*@
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

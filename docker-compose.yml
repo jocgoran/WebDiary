@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  webdiary:
+    image: ${DOCKER_REGISTRY-}webdiary
+    build:
+      context: .
+      dockerfile: WebDiary/Dockerfile
