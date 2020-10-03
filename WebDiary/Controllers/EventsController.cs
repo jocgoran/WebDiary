@@ -20,7 +20,7 @@ namespace WebDiary.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index(int page=0)
+        public async Task<IActionResult> Index(string searchString, int page=0)
         {
             var pageSize = 8;
             var totalPosts = _context.Event.Count();
@@ -36,8 +36,13 @@ namespace WebDiary.Controllers
             var eventi = from e in _context.Event
                          select e;
 
-            eventi = eventi.OrderByDescending(e => e.event_date);
+        // string search in diary_text        
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                eventi = eventi.Where(e => e.event_text.Contains(searchString));
+            }
 
+        // paging filter
             eventi = eventi.OrderByDescending(e => e.event_date)
                                .Skip(pageSize * page)
                                .Take(pageSize);
