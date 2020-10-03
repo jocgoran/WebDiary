@@ -11,19 +11,19 @@
     <h4>Event</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.event_date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.event_date)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.event_text)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.event_text)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.event_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.event_date)
-        </dd>
-        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.created_user_id)
         </dt>
         <dd class = "col-sm-10">
@@ -46,7 +46,7 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.modified_on)
-        </dd>*@
+        </dd>
     </dl>
 </div>
 <div>

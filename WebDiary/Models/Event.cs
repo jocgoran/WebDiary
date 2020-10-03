@@ -25,13 +25,18 @@ namespace WebDiary.Models
         public DateTime event_date { get; set; }
 
         // user ID from AspNetUser table.
-        public int created_user_id { get; set; }
+
+        [StringLength(450)]
+        [Display(Name = "Creato da")]
+        public string created_user_id { get; set; }
 
         [DataType(DataType.DateTime)]
         [Display(Name = "Creato il")]
         public DateTime created_on { get; set; }
         // user ID from AspNetUser table.
-        public int? modified_user_id { get; set; }
+        [StringLength(450)]
+        [Display(Name = "Modificato da")]
+        public string? modified_user_id { get; set; }
 
         [DataType(DataType.DateTime)]
         [Display(Name = "Modificato il")]

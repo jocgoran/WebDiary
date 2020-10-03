@@ -29,11 +29,11 @@ namespace WebDiary.Data
 
 
         // user ID from AspNetUser table.
-        public int created_user_id { get; set; }
+        public string created_user_id { get; set; }
 
         public DateTime created_on { get; set; }
         // user ID from AspNetUser table.
-        public int? modified_user_id { get; set; }
+        public string? modified_user_id { get; set; }
 
         public DateTime? modified_on { get; set; }
 
@@ -41,6 +41,9 @@ namespace WebDiary.Data
             bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            // to get current user ID
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var AddedEntities = ChangeTracker.Entries()
                 .Where(E => E.State == EntityState.Added)
                 .ToList();
@@ -51,6 +54,11 @@ namespace WebDiary.Data
                 if (prop != null)
                 {
                     E.Property("created_on").CurrentValue = DateTime.Now;
+                }
+                prop = E.Metadata.FindProperty("created_user_id");
+                if (prop != null)
+                {
+                    E.Property("created_user_id").CurrentValue = userId;
                 }
             });
 
@@ -64,10 +72,10 @@ namespace WebDiary.Data
                 if (prop != null)
                 {
                     E.Property("modified_on").CurrentValue = DateTime.Now;
-
-                    // to get current user ID
-                    var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+                }
+                prop = E.Metadata.FindProperty("modified_user_id");
+                if (prop != null)
+                {
                     E.Property("modified_user_id").CurrentValue = userId;
                 }
             });

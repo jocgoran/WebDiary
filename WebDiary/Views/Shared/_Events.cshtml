@@ -1,0 +1,15 @@
+﻿@model WebDiary.Models.Event
+
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => Model.event_text)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => Model.event_date)
+    </td>
+    <td>
+        <a asp-action="Edit" asp-route-id="@Model.id">Edit</a> |
+        <a asp-action="Details" asp-route-id="@Model.id">Details</a> |
+        <a asp-action="Delete" asp-route-id="@Model.id">Delete</a>
+    </td>
+</tr>

@@ -20,9 +20,32 @@ namespace WebDiary.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page=0)
         {
-            return View(await _context.Event.ToListAsync());
+            var pageSize = 8;
+            var totalPosts = _context.Event.Count();
+            var totalPages = totalPosts / pageSize;
+            var previousPage = page - 1;
+            var nextPage = page + 1;
+
+            ViewBag.PreviousPage = previousPage;
+            ViewBag.HasPreviousPage = previousPage >= 0;
+            ViewBag.NextPage = nextPage;
+            ViewBag.HasNextPage = nextPage < totalPages;
+
+            var eventi = from e in _context.Event
+                         select e;
+
+            eventi = eventi.OrderByDescending(e => e.event_date);
+
+            eventi = eventi.OrderByDescending(e => e.event_date)
+                               .Skip(pageSize * page)
+                               .Take(pageSize);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView(eventi.ToArray());
+
+            return View(await eventi.AsNoTracking().ToListAsync());
         }
 
         // GET: Events/Details/5

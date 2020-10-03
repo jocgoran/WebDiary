@@ -14,35 +14,15 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="event_text" class="control-label"></label>
-                <input asp-for="event_text" class="form-control" />
-                <span asp-validation-for="event_text" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="event_date" class="control-label"></label>
                 <input asp-for="event_date" class="form-control" />
                 <span asp-validation-for="event_date" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="created_user_id" class="control-label"></label>
-                <input asp-for="created_user_id" class="form-control" />
-                <span asp-validation-for="created_user_id" class="text-danger"></span>
-            </div>
             <div class="form-group">
-                <label asp-for="created_on" class="control-label"></label>
-                <input asp-for="created_on" class="form-control" />
-                <span asp-validation-for="created_on" class="text-danger"></span>
+                <label asp-for="event_text" class="control-label"></label>
+                <input asp-for="event_text" class="form-control" />
+                <span asp-validation-for="event_text" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="modified_user_id" class="control-label"></label>
-                <input asp-for="modified_user_id" class="form-control" />
-                <span asp-validation-for="modified_user_id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_on" class="control-label"></label>
-                <input asp-for="modified_on" class="form-control" />
-                <span asp-validation-for="modified_on" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

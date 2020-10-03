@@ -2,13 +2,27 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
+</p>
+<p class="pager">
+    @if (ViewBag.HasPreviousPage)
+    {
+        <a class="prev" href="@Url.Action("Index", "Events" , new { page = ViewBag.PreviousPage })">
+            &lt; Previous
+        </a>
+    }
+
+    @if (ViewBag.HasNextPage)
+    {
+        <a class="next" href="@Url.Action("Index", "Events" , new { page = ViewBag.NextPage })">
+            Next &gt;
+        </a>
+    }
 </p>
 <table class="table">
     <thead>
@@ -19,48 +33,13 @@
             <th>
                 @Html.DisplayNameFor(model => model.event_date)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.created_user_id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.created_on)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modified_user_id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modified_on)
-            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.event_text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.event_date)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.created_user_id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.created_on)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.modified_user_id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.modified_on)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            @await Html.PartialAsync("_Events", item)
+        }
     </tbody>
 </table>
