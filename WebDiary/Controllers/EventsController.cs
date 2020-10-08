@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebDiary.Authorization;
 using WebDiary.Data;
 using WebDiary.Models;
 
@@ -13,15 +16,26 @@ namespace WebDiary.Controllers
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EventsController(ApplicationDbContext context)
+
+        public EventsController(ApplicationDbContext context, IAuthorizationService authorizationService, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _authorizationService = authorizationService;
         }
 
         // GET: Events
-        public async Task<IActionResult> Index(string searchString, int page=0)
+        public async Task<IActionResult> Index(string searchString, int page = 0)
         {
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             var pageSize = 8;
             var totalPosts = _context.Event.Count();
             var totalPages = totalPosts / pageSize;
@@ -36,26 +50,39 @@ namespace WebDiary.Controllers
             var eventi = from e in _context.Event
                          select e;
 
-        // string search in diary_text        
+            bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
+            if (!isAuthorized)
+            {
+                string currentUserId = _userManager.GetUserId(User);
+                eventi = eventi.Where(e => e.created_user_id == currentUserId);
+            }
+
+            // string search in diary_text        
             if (!String.IsNullOrEmpty(searchString))
             {
                 eventi = eventi.Where(e => e.event_text.Contains(searchString));
             }
 
-        // paging filter
+            // paging filter
             eventi = eventi.OrderByDescending(e => e.event_date)
-                               .Skip(pageSize * page)
-                               .Take(pageSize);
+                                .Skip(pageSize * page)
+                                .Take(pageSize);
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 return PartialView(eventi.ToArray());
 
             return View(await eventi.AsNoTracking().ToListAsync());
+
         }
 
         // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -63,9 +90,18 @@ namespace WebDiary.Controllers
 
             var @event = await _context.Event
                 .FirstOrDefaultAsync(m => m.id == id);
+
             if (@event == null)
             {
                 return NotFound();
+            }
+
+            bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
+            string currentUserId = _userManager.GetUserId(User);
+            if (!isAuthorized 
+                && currentUserId != @event.created_user_id)
+            {
+                return Forbid();
             }
 
             return View(@event);
@@ -96,15 +132,28 @@ namespace WebDiary.Controllers
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
             var @event = await _context.Event.FindAsync(id);
-            if (@event == null)
+            if(@event == null)
             {
                 return NotFound();
+            }
+
+            bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
+            string currentUserId = _userManager.GetUserId(User);
+            if (!isAuthorized 
+                && currentUserId != @event.created_user_id)
+            {
+                return Forbid();
             }
             return View(@event);
         }
@@ -116,9 +165,23 @@ namespace WebDiary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id,event_text,event_date,created_user_id,created_on,modified_user_id,modified_on")] Event @event)
         {
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             if (id != @event.id)
             {
                 return NotFound();
+            }
+
+            bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
+            string currentUserId = _userManager.GetUserId(User);
+            if (!isAuthorized
+                && currentUserId != @event.created_user_id)
+            {
+                return Forbid();
             }
 
             if (ModelState.IsValid)
@@ -142,11 +205,17 @@ namespace WebDiary.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(@event);
+
         }
 
         // GET: Events/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -154,9 +223,13 @@ namespace WebDiary.Controllers
 
             var @event = await _context.Event
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (@event == null)
+
+            bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
+            string currentUserId = _userManager.GetUserId(User);
+            if (!isAuthorized
+                && currentUserId != @event.created_user_id)
             {
-                return NotFound();
+                return Forbid();
             }
 
             return View(@event);
@@ -167,7 +240,26 @@ namespace WebDiary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult();
+            }
+
             var @event = await _context.Event.FindAsync(id);
+
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
+            string currentUserId = _userManager.GetUserId(User);
+            if (!isAuthorized
+                && currentUserId != @event.created_user_id)
+            {
+                return Forbid();
+            }
+
             _context.Event.Remove(@event);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using WebDiary.Controllers;
+using WebDiary.Authorization;
 
 namespace WebDiary
 {
@@ -36,6 +38,7 @@ namespace WebDiary
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -46,7 +49,14 @@ namespace WebDiary
                     .Build();
             });
 
-           // services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            // Authorization handlers.
+            services.AddScoped<IAuthorizationHandler,
+                                  EventIsOwnerAuthorizationHandler>();
+
+            services.AddSingleton<IAuthorizationHandler,
+                                  EventAdministratorsAuthorizationHandler>();
+
+            // services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
