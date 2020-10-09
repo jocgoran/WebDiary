@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using WebDiary.Authorization;
 using WebDiary.Data;
 using WebDiary.Models;
@@ -98,7 +96,7 @@ namespace WebDiary.Controllers
 
             bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
             string currentUserId = _userManager.GetUserId(User);
-            if (!isAuthorized 
+            if (!isAuthorized
                 && currentUserId != @event.created_user_id)
             {
                 return Forbid();
@@ -143,14 +141,14 @@ namespace WebDiary.Controllers
             }
 
             var @event = await _context.Event.FindAsync(id);
-            if(@event == null)
+            if (@event == null)
             {
                 return NotFound();
             }
 
             bool isAuthorized = User.IsInRole(Constants.EventAdministratorsRole);
             string currentUserId = _userManager.GetUserId(User);
-            if (!isAuthorized 
+            if (!isAuthorized
                 && currentUserId != @event.created_user_id)
             {
                 return Forbid();

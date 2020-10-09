@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using WebDiary.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using System.Threading.Tasks;
+using WebDiary.Models;
 
 namespace WebDiary.Authorization
 {

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Providers.Entities;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WebDiary.Models;
+using System;
+using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using WebDiary.Models;
 
 namespace WebDiary.Data
 {
@@ -25,7 +20,7 @@ namespace WebDiary.Data
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public DbSet<Event> Event{ get; set; }
+        public DbSet<Event> Event { get; set; }
 
 
         // user ID from AspNetUser table.
@@ -67,7 +62,7 @@ namespace WebDiary.Data
                 .ToList();
 
             EditedEntities.ForEach(E =>
-            { 
+            {
                 var prop = E.Metadata.FindProperty("modified_on");
                 if (prop != null)
                 {
